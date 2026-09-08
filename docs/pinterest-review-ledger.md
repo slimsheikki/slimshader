@@ -36,7 +36,7 @@ The hash identifies the last component of the observed `https://i.pinimg.com/236
 
 Four independent modules: `spectral-bloom`, `particle-field`, `chromatic-contours`, `digital-streaks`. Each owns its parameters and renderer; shared canvas setup utilities only. Existing upload/drop/paste and worker/export transport reused. Existing shaders retained; removed Heated Shapes stays unregistered. Particle locations and streak randomness use source-space coordinates and deterministic seeds. The current app has 11 active effects.
 
-Validation: production build; `tests/board-shaders.spec.ts` (four effect/parameter/transparency/2x-export checks); visual comparison of all candidates and nearest existing effects. Publication status: prepared, awaiting successful GitHub Pages verification. Record exact source/release commits in the next ledger entry after deployment.
+Validation: production build; `tests/board-shaders.spec.ts` (four effect/parameter/transparency/2x-export checks); visual comparison of all candidates and nearest existing effects. Publication status: published and verified on 2026-09-08 at https://slimsheikki.github.io/slimshader/. Source commit: `3a319cfb36de0ec881e86e4a6058e1dd4ddb2bf1`. GitHub Pages release commit: `bd56cd0297b6301c2c53666d37bd429c9474741c`. The live page serves the validated `index-C2IvL4By.js` bundle. Do not recreate these four effects on subsequent reviews.
 
 ### Next-review backlog
 
