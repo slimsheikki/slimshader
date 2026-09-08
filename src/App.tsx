@@ -1,3 +1,6 @@
+import DustEditor from './shaders/luminous-dust/Editor';
+import {defaults as dustDefaults} from './shaders/luminous-dust/model';
+import {renderDust} from './shaders/luminous-dust/render';
 import FilmEditor from './shaders/iridescent-film/Editor';
 import {defaults as filmDefaults} from './shaders/iridescent-film/model';
 import {renderFilm} from './shaders/iridescent-film/render';
@@ -51,6 +54,7 @@ export default function App() {
   const contourThumbnail=useRef<HTMLCanvasElement>(null);
   const streakThumbnail=useRef<HTMLCanvasElement>(null);
   const flowThumbnail=useRef<HTMLCanvasElement>(null);
+  const dustThumbnail=useRef<HTMLCanvasElement>(null);
   const filmThumbnail=useRef<HTMLCanvasElement>(null);
   const thumbnail = useRef<HTMLCanvasElement>(null);
   const glassThumbnail = useRef<HTMLCanvasElement>(null);
@@ -73,16 +77,18 @@ export default function App() {
     if(active&&streakThumbnail.current)renderStreaks(streakThumbnail.current,image,streakDefaults);
     if(active&&flowThumbnail.current)renderFlow(flowThumbnail.current,image,flowDefaults);
     if(active&&filmThumbnail.current)renderFilm(filmThumbnail.current,image,filmDefaults);
+    if(active&&dustThumbnail.current)renderDust(dustThumbnail.current,image,dustDefaults);
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
   return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / {String(shaders.length).padStart(2,'0')}</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
-  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='iridescent-film'?filmThumbnail:shader.id==='flow-trails'?flowThumbnail:shader.id==='spectral-bloom'?spectralThumbnail:shader.id==='particle-field'?particleThumbnail:shader.id==='chromatic-contours'?contourThumbnail:shader.id==='digital-streaks'?streakThumbnail:shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
+  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='luminous-dust'?dustThumbnail:shader.id==='iridescent-film'?filmThumbnail:shader.id==='flow-trails'?flowThumbnail:shader.id==='spectral-bloom'?spectralThumbnail:shader.id==='particle-field'?particleThumbnail:shader.id==='chromatic-contours'?contourThumbnail:shader.id==='digital-streaks'?streakThumbnail:shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
   {open === 'spectral-bloom' && <SpectralEditor onClose={()=>setOpen(null)}/>}
   {open === 'particle-field' && <ParticleEditor onClose={()=>setOpen(null)}/>}
   {open === 'chromatic-contours' && <ContourEditor onClose={()=>setOpen(null)}/>}
   {open === 'digital-streaks' && <StreakEditor onClose={()=>setOpen(null)}/>}
   {open === 'flow-trails' && <FlowEditor onClose={()=>setOpen(null)}/>}
   {open === 'iridescent-film' && <FilmEditor onClose={()=>setOpen(null)}/>}
+  {open === 'luminous-dust' && <DustEditor onClose={()=>setOpen(null)}/>}
   {open === 'glass' && <GlassEditor onClose={()=>setOpen(null)}/>}
   {open === 'ascii' && <Editor onClose={()=>setOpen(null)}/>}
   {open === 'grain-fade' && <FadeEditor onClose={()=>setOpen(null)}/>}
