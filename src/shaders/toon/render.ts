@@ -30,7 +30,7 @@ export function renderToon(target: Surface, image: ImageBitmap, p: ToonParams) {
     const edge=clamp((Math.hypot(gx,gy)/4-threshold)*12)*p.outlines/100;
     edges[y*w+x]=Math.round(edge*255);
     for(let c=0;c<3;c++){
-      const color=p.palette==='source'?clamp(band+(input[i+c]/255-l)*p.saturation/100)*255:dark[c]+(light[c]-dark[c])*band;
+      const color=p.palette==='source'?clamp(band+(input[i+c]/255-l))*255:dark[c]+(light[c]-dark[c])*band;
       const painted=color;
       const mixed=painted;
       data[i+c]=mixed;
@@ -80,6 +80,11 @@ export function renderToon(target: Surface, image: ImageBitmap, p: ToonParams) {
     }
     // Brush tips cannot leak outside transparent source areas.
     painted[i+3]=p.transparent?input[i+3]:255;
+  }
+  // Saturation affects the finished color treatment for every palette; zero is neutral gray.
+  for(let i=0;i<painted.length;i+=4){
+    const luminance=.2126*painted[i]+.7152*painted[i+1]+.0722*painted[i+2];
+    for(let c=0;c<3;c++)painted[i+c]=luminance+(painted[i+c]-luminance)*p.saturation/100;
   }
   ctx.putImageData(finish,0,0);
 }

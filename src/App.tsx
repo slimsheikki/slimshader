@@ -16,7 +16,7 @@ export default function App() {
   const toonThumbnail = useRef<HTMLCanvasElement>(null);
   useEffect(() => { let active = true; fetch('/sample.jpg').then(r=>r.blob()).then(createImageBitmap).then(image=>{
     if (active && thumbnail.current) renderAscii(thumbnail.current, image, { ...defaults, size: 9 });
-    if (active && toonThumbnail.current) renderToon(toonThumbnail.current, image, {...toonDefaults, palette: 'sunset'});
+    if (active && toonThumbnail.current) renderToon(toonThumbnail.current, image, toonDefaults);
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
   return <div className="app"><header className="header"><a className="brand" href="/" aria-label="SLIM.SHADERS home"><span className="brand-mark">S<span>▪</span></span>SLIM<span className="brand-dot">.</span>SHADERS</a><span className="header-note">A playground for pixels</span><span className="version"><span/> Collection 001</span></header>

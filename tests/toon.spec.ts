@@ -35,3 +35,14 @@ test('brushwork and seed change the image, reset restores deterministic paint',a
   await page.getByLabel('Paint amount',{exact:true}).focus();await page.keyboard.press('Home');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(initial);
   await expect(page.getByLabel('Paint amount',{exact:true})).toHaveValue('0');
 });
+test('original colors are default and Saturation desaturates the painted result',async({page})=>{
+  await page.goto('/');await page.getByRole('button',{name:'Open Painterly Toon editor'}).click();
+  await expect(page.getByLabel('Palette',{exact:true})).toHaveValue('source');await expect(page.getByLabel('Saturation',{exact:true})).toHaveValue('100');
+  const image=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=240;c.height=160;const x=c.getContext('2d')!;x.fillStyle='#e84a38';x.fillRect(0,0,120,160);x.fillStyle='#3076dd';x.fillRect(120,0,120,160);return c.toDataURL().split(',')[1];});
+  await page.getByLabel('Upload image').setInputFiles({name:'colors.png',mimeType:'image/png',buffer:Buffer.from(image,'base64')});
+  const c=page.locator('canvas[aria-label="Painterly Toon image preview"]');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.width)).toBe(240);
+  const colors=await c.evaluate((c:HTMLCanvasElement)=>{const x=c.getContext('2d')!;return [Array.from(x.getImageData(50,80,1,1).data),Array.from(x.getImageData(190,80,1,1).data)];});
+  expect(colors[0][0]).toBeGreaterThan(colors[0][2]);expect(colors[1][2]).toBeGreaterThan(colors[1][0]);
+  await page.getByLabel('Saturation',{exact:true}).focus();await page.keyboard.press('Home');
+  await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>{const d=c.getContext('2d')!.getImageData(50,80,1,1).data;return Math.max(d[0],d[1],d[2])-Math.min(d[0],d[1],d[2]);})).toBe(0);
+});
