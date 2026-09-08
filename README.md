@@ -68,3 +68,7 @@ Enable **Smudge** above the image, then drag with mouse, pen, or touch. Brush si
 ### Varied painterly marks
 
 Painterly Toon now paints in three passes: broad angular underpainting, medium flats/dabs/rounded strokes, then selective fine accents. Large strokes avoid strong image gradients and small accents concentrate near detail. **Stroke shape**, **Size variety**, **Broad paint patches**, and **Fine detail strokes** control the mixture. Irregular chisel-ended polygons provide the planar paint patches in the supplied references. Defaults use mixed strokes and less bristle noise. Source colors, outlines, seeded repeatability, and resolution-independent export remain supported.
+
+## Blueprint Mosaic
+
+`src/shaders/blueprint/` turns image luminance into a pixel-stepped silhouette filled with dots, outlined squares, crosses, and stippling over a blueprint grid. Controls cover cell size, silhouette threshold/inversion, brightness/contrast, pattern density, symbol scale/weight, grid visibility, colors, transparency, and seeded shuffle. Cutouts or contrasting backgrounds work best; it does not perform semantic background removal. Transparent mode removes the base fill while retaining the adjustable grid (set Grid visibility to zero to export only the subject). Geometry is drawn in source coordinates at every export scale. Tests verify control updates, exact 2× dimensions, reset, transparent image regions, and inversion.
