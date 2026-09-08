@@ -72,3 +72,7 @@ Painterly Toon now paints in three passes: broad angular underpainting, medium f
 ## Blueprint Mosaic
 
 `src/shaders/blueprint/` turns image luminance into a pixel-stepped silhouette filled with dots, outlined squares, crosses, and stippling over a blueprint grid. Controls cover cell size, silhouette threshold/inversion, brightness/contrast, pattern density, symbol scale/weight, grid visibility, colors, transparency, and seeded shuffle. Cutouts or contrasting backgrounds work best; it does not perform semantic background removal. Transparent mode removes the base fill while retaining the adjustable grid (set Grid visibility to zero to export only the subject). Geometry is drawn in source coordinates at every export scale. Tests verify control updates, exact 2× dimensions, reset, transparent image regions, and inversion.
+
+## Grain Fade
+
+`src/shaders/grain-fade/` combines soft-focus blur, local glow, saturation and seeded grain with a linear or radial fade mask. Linear controls include position and angle; radial controls include center and radius. Both support feather softness, amount and inversion. Fade into a chosen color or export true PNG transparency. Grain scale and blur radius use source pixels; masks use normalized image coordinates so exports retain the composition. Cutouts provide floating subjects; this filter does not remove photo backgrounds. Tests cover mask direction/inversion, radial controls, reset, exact 2× dimensions and exported alpha.
