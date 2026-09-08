@@ -10,20 +10,27 @@ function features(image:ImageBitmap){
   if(a>.1&&l>.08)points.push({x:x/96,y:y/96,r:d[i],g:d[i+1],b:d[i+2],weight:l*a});}
  points.sort((a,b)=>b.weight-a.weight);cache.set(image,points);return points;
 }
-// Each tracker travels between four image-derived landmarks along a closed,
-// smooth path. Independent phases keep the network reshaping rather than swaying
-// as one rigid overlay. Image deformation remains a separate, subtle control.
+// Seeded irregular hold/retarget cycles: related nodes lock together, then
+// quickly acquire new landmarks. Each group has its own timing, and the last
+// target returns to the first so the same schedule works for looping exports.
 export function trackingNodes(image:ImageBitmap,p:GeometryParams,time:number){
  const pool=features(image);if(!pool.length)return [];
  const pick=(n:number)=>pool[Math.floor(random(n+p.seed)*pool.length)];
  const phase=time/p.duration*Math.PI*2,amp=p.motion/100*.026;
+ const count=p.retargets;
  return Array.from({length:p.boxes+p.connections?Math.max(8,p.connections+1):0},(_,i)=>{
-  const home=pick(i+30),progress=((time/p.duration+random(i+91))*4%4+4)%4,k=Math.floor(progress),t=progress-k;
-  const points=Array.from({length:4},(_,j)=>pick(i*13+j*41+30));
-  const a=points[(k+3)%4],b=points[k],c=points[(k+1)%4],d=points[(k+2)%4];
-  const curve=(v:'x'|'y')=>.5*((2*b[v])+(-a[v]+c[v])*t+(2*a[v]-5*b[v]+4*c[v]-d[v])*t*t+(-a[v]+3*b[v]-3*c[v]+d[v])*t*t*t);
+  const group=Math.floor(i/4),home=pick(i+30);
+  const weights=Array.from({length:count},(_,j)=>.45+random(group*197+j*31+p.seed)*1.3);
+  const total=weights.reduce((a,b)=>a+b,0);
+  let cursor=(((time/p.duration+random(group*53+p.seed))%1+1)%1)*total,k=0;
+  while(k<count-1&&cursor>=weights[k])cursor-=weights[k++];
+  const t=cursor/weights[k],hold=p.snap/100*.91;
+  // Transition in the remaining fraction of this interval; no per-frame jitter.
+  const u=Math.max(0,Math.min(1,(t-hold)/(1-hold))),ease=u*u*(3-2*u);
+  const a=pick(i*137+k*47+30),b=pick(i*137+((k+1)%count)*47+30);
   const blend=p.tracking/100;
-  const x=Math.max(.025,Math.min(.975,home.x+(curve('x')-home.x)*blend)),y=Math.max(.025,Math.min(.975,home.y+(curve('y')-home.y)*blend));
+  const x=Math.max(.025,Math.min(.975,home.x+(a.x+(b.x-a.x)*ease-home.x)*blend));
+  const y=Math.max(.025,Math.min(.975,home.y+(a.y+(b.y-a.y)*ease-home.y)*blend));
   return{x:x+amp*Math.sin(phase+y*5)*Math.sin(Math.PI*x),y:y+amp*.65*Math.sin(phase+x*4+1)*Math.sin(Math.PI*y)};
  });
 }
@@ -56,7 +63,7 @@ export function renderGeometry(target:Surface,image:ImageBitmap,p:GeometryParams
  for(let i=0;i<p.connections;i++){const a=nodes[i],b=nodes[i+1];c.beginPath();c.moveTo(a.x*w,a.y*h);c.lineTo(b.x*w,b.y*h);c.stroke();}
  for(let i=0;i<p.boxes;i++){
   // A large frame follows the whole network; smaller frames follow local
-  // groups. RMS extents change smoothly without abruptly swapping min/max nodes.
+  // groups. Their bounds lock during holds and snap with each retarget burst.
   const group=i===0?nodes:Array.from({length:4},(_,j)=>nodes[(i*3+j)%nodes.length]);
   const mx=group.reduce((sum,a)=>sum+a.x,0)/group.length,my=group.reduce((sum,a)=>sum+a.y,0)/group.length;
   const rx=Math.min(.46,.035+Math.sqrt(group.reduce((sum,a)=>sum+(a.x-mx)**2,0)/group.length)*1.65);

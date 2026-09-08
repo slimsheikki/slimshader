@@ -64,3 +64,7 @@ User approved an original animated image interpretation of SARES's Cadere previe
 ### Living Geometry motion correction
 
 The user found the initial graphics too static compared with the reference. Decoupled tracker travel from subtle image deformation. Independently phased closed curves now move nodes between source-image landmarks; lines reshape with these nodes, and boxes track smooth group centers/extents instead of barely shifting fixed corners. Added Tracking movement separately from Image movement. Tests verify meaningful travel with image motion disabled, seamless trajectory closure, zero travel at zero tracking, and working pause/PNG/video exports. Compared rendered frames at 0, 2 and 4 seconds visually.
+
+### Living Geometry technical motion revision
+
+User requested more random, snappy, technical movement. Replaced continuous curved tracker travel with seeded irregular hold/retarget schedules. Groups of four trackers acquire new image landmarks together, with independently timed group bursts and brief eased transitions. Default sharpness 85 and eight retargets per loop. Added Snap sharpness and Retargets per loop controls; original image movement remains separate. All three Living Geometry tests passed, including stable holds for most frames, meaningful jumps, deterministic random patterns, closed loops, pause, PNG and playable video export.

@@ -33,3 +33,20 @@ test('tracking moves substantially with a still image and closes its loop smooth
  expect(result.travel).toBeGreaterThan(.1);expect(result.loop).toBeLessThan(.000001);expect(result.near).toBeLessThan(.001);expect(result.still).toBe(0);
  await page.screenshot({path:'../work/tracking-motion-comparison.png'});
 });
+
+test('technical tracking has stable holds, sharp jumps and repeatable random timing',async({page})=>{
+ await page.goto('/');
+ const result=await page.evaluate(async()=>{
+  // @ts-expect-error Vite browser import
+  const {trackingNodes}=await import('/src/shaders/living-geometry/render.ts');
+  // @ts-expect-error Vite browser import
+  const {defaults}=await import('/src/shaders/living-geometry/model.ts');
+  const image=await createImageBitmap(await(await fetch('/sample.jpg')).blob());const p={...defaults,motion:0};
+  const sample=(settings:typeof p)=>Array.from({length:241},(_,i)=>trackingNodes(image,settings,i/30)[0]);
+  const a=sample(p),smooth=sample({...p,snap:0});
+  const deltas=(points:typeof a)=>points.slice(1).map((n:{x:number;y:number},i:number)=>Math.hypot(n.x-points[i].x,n.y-points[i].y));
+  const d=deltas(a),sd=deltas(smooth),different=trackingNodes(image,{...p,seed:29},1)[0],same=trackingNodes(image,p,1)[0];
+  image.close();return{holds:d.filter(n=>n<1e-8).length/d.length,max:Math.max(...d),smoothHolds:sd.filter(n=>n<1e-8).length/sd.length,seedDelta:Math.hypot(different.x-same.x,different.y-same.y),repeat:JSON.stringify(a)===JSON.stringify(sample(p))};
+ });
+ expect(result.holds).toBeGreaterThan(.6);expect(result.max).toBeGreaterThan(.04);expect(result.smoothHolds).toBeLessThan(.1);expect(result.seedDelta).toBeGreaterThan(.03);expect(result.repeat).toBe(true);
+});
