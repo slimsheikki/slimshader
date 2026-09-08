@@ -89,3 +89,5 @@ Glass Panels v2 adds subject distance, glass thickness, selective focus, fine be
 ### Pinterest-inspired effects
 
 Spectral Bloom builds radial highlight trails with separate color channels. Particle Field samples the source into reproducible scattered dots. Chromatic Contours isolates image edges with color separation and glow. Digital Streaks displaces short image slices into fragmented motion trails. Each has an independent renderer, controls, preview worker, and high-resolution export. The review history and duplicate checks are in `docs/pinterest-review-ledger.md`.
+
+Flow Trails draws deterministic, tapered curves through an image-derived flow field; length, curvature, direction, density, spacing and source blend are adjustable. Iridescent Film approximates a pearlescent coating from smoothed image relief and adjustable light direction, film thickness, saturation and reflection strength. It does not infer true 3D geometry. Both retain the common upload/paste/drop and source-resolution export flow.

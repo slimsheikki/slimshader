@@ -43,3 +43,12 @@ Validation: production build; `tests/board-shaders.spec.ts` (four effect/paramet
 - Reconcile 14 reported pins with 13 exposed thumbnail tiles; do not mark missing pin reviewed.
 - Revisit abstract petal and curved particle trails only if clearer thumbnails/evidence become available. Do not duplicate existing families to fill this backlog.
 - Consider partial-image application as an improvement to Heated Shader if requested or repeatedly supported by new references.
+
+## Follow-up — Flow Trails and Iridescent Film
+
+The board subsequently reported 16 pins but still exposed the same 13 thumbnails; three pins remain unseen. User approved proceeding with the strongest proposed candidates. Silk Warp and Motion Echo remain exploratory and were not implemented.
+
+- **Flow Trails** revisits thumbnail `52fef09f42af334aa1b74d925185f386`. Unlike the prior Particle Field, strands follow continuous curved paths in a shared vector field with image-edge steering, gradual taper, and fading opacity. Unlike Digital Streaks, it draws curves instead of rectangular source slices. This resolves the earlier deferred curved-trail family with an original image-based interpretation, not an exact recreation.
+- **Iridescent Film** revisits thumbnail `eac9af074806765a230b1f5646309c5a`. Earlier it was grouped broadly with Heated Shader. This approved implementation uses image-derived surface relief and light/view-dependent channel interference rather than a thermal lookup. The distinction is functional: adjustable light direction, film thickness, relief, smoothing and pearl saturation. It is a stylized surface approximation, not recovered 3D scene geometry.
+- Duplicate cross-checks: matched the existing thumbnail identities; reviewed nearest active renderers; compared both new effects against Particle Field and Heated Shader on the same David image. Neither reinstates a hidden or removed shader. Do not create either effect again in weekly reviews.
+- Validation: production build and all six Pinterest-effect parameter/transparency/2x-PNG tests passed. Both outputs visually inspected. Source commit containing this entry identifies the implementation; publication pending verification.
