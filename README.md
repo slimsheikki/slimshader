@@ -76,3 +76,7 @@ Painterly Toon now paints in three passes: broad angular underpainting, medium f
 ## Grain Fade
 
 `src/shaders/grain-fade/` combines soft-focus blur, local glow, saturation and seeded grain with a linear or radial fade mask. Linear controls include position and angle; radial controls include center and radius. Both support feather softness, amount and inversion. Fade into a chosen color or export true PNG transparency. Grain scale and blur radius use source pixels; masks use normalized image coordinates so exports retain the composition. Cutouts provide floating subjects; this filter does not remove photo backgrounds. Tests cover mask direction/inversion, radial controls, reset, exact 2× dimensions and exported alpha.
+
+## Public hosting
+
+The live app is hosted on GitHub Pages at https://slimsheikki.github.io/slimshader/. The `gh-pages` branch contains the production build. Build with `npm run build` and publish the contents of `dist` to that branch to update the public app.

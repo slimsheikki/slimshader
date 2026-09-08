@@ -34,7 +34,7 @@ export default function App() {
   const heatedThumbnail = useRef<HTMLCanvasElement>(null);
   const sketchThumbnail = useRef<HTMLCanvasElement>(null);
   const toonThumbnail = useRef<HTMLCanvasElement>(null);
-  useEffect(() => { let active = true; fetch('/sample.jpg').then(r=>r.blob()).then(createImageBitmap).then(image=>{
+  useEffect(() => { let active = true; fetch(`${import.meta.env.BASE_URL}sample.jpg`).then(r=>r.blob()).then(createImageBitmap).then(image=>{
     if (active && thumbnail.current) renderAscii(thumbnail.current, image, { ...defaults, size: 9 });
     if (active && toonThumbnail.current) renderToon(toonThumbnail.current, image, toonDefaults);
     if (active && sketchThumbnail.current) renderSketch(sketchThumbnail.current,image,sketchDefaults);

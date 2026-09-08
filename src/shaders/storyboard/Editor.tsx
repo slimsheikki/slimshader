@@ -38,7 +38,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
     const paste=(event:ClipboardEvent)=>{ const file=Array.from(event.clipboardData?.items||[]).find(item=>item.type.startsWith('image/'))?.getAsFile(); if(file){event.preventDefault();void load(file,'Pasted image');} };
     document.addEventListener('paste',paste);return ()=>document.removeEventListener('paste',paste);
   },[]);
-  async function sample() {try {setLoading(true);const response=await fetch('/sample.jpg');if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'David — Liam Ward');}catch(e){setError((e as Error).message);setLoading(false);}}
+  async function sample() {try {setLoading(true);const response=await fetch(`${import.meta.env.BASE_URL}sample.jpg`);if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'David — Liam Ward');}catch(e){setError((e as Error).message);setLoading(false);}}
   async function download() {
     setError('');setExporting(true);setDownloaded(false);
     try {

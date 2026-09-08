@@ -41,7 +41,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
     document.addEventListener('paste',paste);return ()=>document.removeEventListener('paste',paste);
   },[]);
   useEffect(()=>{void sample();},[]);
-  async function sample() {try {setLoading(true);const response=await fetch('/sample.jpg');if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'Shape canvas');}catch(e){setError((e as Error).message);setLoading(false);}}
+  async function sample() {try {setLoading(true);const response=await fetch(`${import.meta.env.BASE_URL}sample.jpg`);if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'Shape canvas');}catch(e){setError((e as Error).message);setLoading(false);}}
   async function download() {
     setError('');setExporting(true);setDownloaded(false);
     try {

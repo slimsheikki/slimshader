@@ -45,7 +45,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
     document.addEventListener('paste',paste);return ()=>document.removeEventListener('paste',paste);
   },[]);
 
-  async function sample() {try {setLoading(true);const response=await fetch('/sample.jpg');if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'David — Liam Ward');}catch(e){setError((e as Error).message);setLoading(false);}}
+  async function sample() {try {setLoading(true);const response=await fetch(`${import.meta.env.BASE_URL}sample.jpg`);if(!response.ok)throw new Error('Sample image could not load.');await load(await response.blob(),'David — Liam Ward');}catch(e){setError((e as Error).message);setLoading(false);}}
   function point(e:ReactPointerEvent<HTMLCanvasElement>):SmudgePoint {
     const box=e.currentTarget.getBoundingClientRect();
     return {x:Math.max(0,Math.min(image!.width,(e.clientX-box.left)/box.width*image!.width)),y:Math.max(0,Math.min(image!.height,(e.clientY-box.top)/box.height*image!.height))};
