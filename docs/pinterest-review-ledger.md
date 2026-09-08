@@ -72,3 +72,7 @@ User requested more random, snappy, technical movement. Replaced continuous curv
 ### Living Geometry looping GIF export
 
 Added worker-based local GIF export with infinite repeat metadata, exact 20 fps sampling, selected loop duration, 480/640/960 px maximum long-side sizes, stable palette, solid background, progress and cancellation. No new shader family. Build and all five Living Geometry tests passed, including GIF decoding, 80 frames for a four-second loop, exact frame delays, infinite repeat, visibly different frames and cancellation, plus previous PNG/video and tracking-motion checks.
+
+### Glass Panels overlapping refraction revision
+
+User provided fluted flower references and approved a more realistic replacement. Updated existing Glass Panels rather than adding a duplicate: curved cylindrical refraction with propagation across a source-space gap makes neighbouring panels reveal overlapping parts of the image. Default light/focus tuned for clearer transmission. Added Reeded Glass preset. Prior renderer and defaults saved in unregistered `glass-previous`; original legacy backup retained. Synthetic single-stem comparison: previous default lost the stem at a panel seam; new default reveals two copies, Reeded Glass seven. Visually compared old/new output on the shared photograph. Production build and three glass tests passed, including repeated thin details at 1x/2x, unchanged clear gaps, zero-effect identity, direct placement and transparent PNG export.

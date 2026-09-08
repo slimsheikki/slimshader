@@ -11,20 +11,6 @@ export function renderGlass(target:OffscreenCanvas|HTMLCanvasElement,image:Image
  const angle=p.angle*Math.PI/180,cs=Math.cos(angle),sn=Math.sin(angle),span=Math.abs(w*cs)+Math.abs(h*sn);
  const group=p.placement==='area'?span*p.groupWidth/100:span,start=p.placement==='area'?span*p.groupPosition/100-group/2:0;
  const pitch=group/Math.max(1,p.count),half=pitch*p.width/200,depth=p.distance/100,thick=p.thickness/100;
- // Back-project through a curved cylindrical face. The broad centre is nearly
- // flat; the shoulders turn steeply. Propagation through the glass and then
- // across a source-space air gap lets adjacent ribs see overlapping image areas.
- // This is a 2D optical approximation, not a recovered scene depth map.
- const travel=half*(.35+thick*.9)+span*depth*.20;
- const eta=1.46+thick*.12,curve=p.curve/100,force=p.refraction/100;
- const tableSize=2048,lens=new Float64Array(tableSize+1),slope=new Float64Array(tableSize+1);
- const ray=(q:number)=>{
-  const normal=clamp((q*.25+q*q*q*.75)*(.18+curve*.77),-.97,.97);
-  const incidence=Math.asin(normal),inside=Math.asin(normal/eta);
-  return Math.tan(clamp(2*(incidence-inside),-1.25,1.25));
- };
- for(let j=0;j<=tableSize;j++){const q=j/tableSize*2-1;lens[j]=ray(q);slope[j]=(ray(clamp(q+.0005,-1,1))-ray(clamp(q-.0005,-1,1)))/(q===-1||q===1?.0005:.001);}
- const lookup=(table:Float64Array,q:number)=>{const t=clamp((q+1)*.5*tableSize,0,tableSize),a=Math.floor(t);return table[a]+(table[Math.min(tableSize,a+1)]-table[a])*(t-a);};
  const bg=[1,3,5].map(i=>parseInt(p.background.slice(i,i+2),16));
  // Premultiplied bilinear samples preserve cutout edges through refraction and frost.
  const sample=(x:number,y:number,c:number)=>{
@@ -39,23 +25,21 @@ export function renderGlass(target:OffscreenCanvas|HTMLCanvasElement,image:Image
   const slot=(u-start)/pitch-p.offset/100,cell=Math.floor(slot),q=(slot-cell-.5)*pitch/half;
   let alpha=original[i+3]/255;
   if(Math.abs(q)<=1&&u>=start&&u<=start+group&&p.mix>0){
-   const edge=Math.pow(Math.abs(q),8);
-   const bend=lookup(lens,q)*travel*force;
-   const irregular=p.distortion/100*half*.28*(Math.sin(v/Math.max(w,h)*7+cell*1.7)+.3*Math.sin(v/Math.max(w,h)*19+cell))*(1-q*q);
+   const edge=Math.pow(Math.abs(q),8),curve=p.curve/100;
+   // A broad lens centre rolls into steeper bevels. Distance increases optical displacement.
+   const profile=q*(.28+.35*curve)+q*q*q*(.18+.42*curve);
+   const bend=p.refraction/100*half*profile*(.32+depth*1.25+thick*.55);
+   const irregular=p.distortion/100*half*.12*(Math.sin(v/Math.max(w,h)*7+cell*1.7)+.3*Math.sin(v/Math.max(w,h)*19+cell))*(1-q*q);
    const shift=(u-span/2)/span*depth*thick*pitch*.18;
    const sx=x+(-bend+irregular+shift)*cs,sy=y+(-bend+irregular+shift)*sn;
-   // The footprint widens where a steep shoulder compresses a large source
-   // region into a few pixels, retaining fine stems and preventing hard aliasing.
-   const footprint=Math.min(16,Math.max(0,Math.abs(1-force*travel/half*lookup(slope,q))-1));
-   const frost=p.blur*scale*(.3+.7*edge)+p.focus/100*depth*scale*3;
-   const filterWidth=Math.max(frost*2,footprint);
-   const spread=p.dispersion/100*Math.abs(bend)*.035;
+   const frost=(p.blur*scale*(.3+.7*edge)+p.focus/100*depth*scale*3);
+   const spread=p.dispersion/100*half*.055*q*(.3+edge);
    const light=p.light/90,bevelWidth=.025+thick*.055+(1-p.focus/100)*.025;
    const rim=Math.exp(-Math.pow((q-Math.sign(light||1)*(.91-Math.abs(light)*.035))/bevelWidth,2))*p.highlights/100*.3;
    const secondary=Math.exp(-Math.pow((q-Math.sign(light||1)*(.91-Math.abs(light)*.035)+Math.sign(light||1)*(.055+thick*.07))/(bevelWidth*.6),2))*p.highlights/100*thick*.1;
    const reflection=Math.exp(-Math.pow((q-light*.45)/(.3+thick*.25),2))*p.reflections/100*.12*(.85+.15*Math.sin(v/Math.max(w,h)*3));
    const shadow=1-edge*p.edges/100*(.12+thick*.25);
-   const read=(c:number,delta=0)=>{const xx=sx+delta*cs,yy=sy+delta*sn;if(filterWidth<.75)return sample(xx,yy,c);let value=0;for(const t of [-.375,-.125,.125,.375])value+=sample(xx+t*filterWidth*cs,yy+t*filterWidth*sn,c);return value*.25;};
+   const read=(c:number,delta=0)=>{const xx=sx+delta*cs,yy=sy+delta*sn;return frost>.01?sample(xx,yy,c)*.5+sample(xx-frost*cs,yy-frost*sn,c)*.25+sample(xx+frost*cs,yy+frost*sn,c)*.25:sample(xx,yy,c);};
    const sa=read(3),mix=p.mix/100;
    for(let c=0;c<3;c++){
     const value=read(c,c===0?spread:c===2?-spread:0);
