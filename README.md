@@ -1,6 +1,6 @@
 # SLIM.SHADERS
 
-A local-first image-effects library for designers. The first module is a procedural ASCII studio, built with React, Vite, TypeScript, and Canvas 2D. Images are processed on the device; there is no upload server.
+A local-first image-effects library for designers. Includes procedural ASCII and cel-shaded Toon studios, built with React, Vite, TypeScript, and Canvas 2D. Images are processed on the device; there is no upload server.
 
 ## Run
 
@@ -40,3 +40,7 @@ Tests use installed Google Chrome through Playwright. They cover sample loading,
 ## Sample image
 
 Photo by [Liam Ward on Unsplash](https://unsplash.com/photos/a-black-and-white-photo-of-a-statue-of-a-man-EsIgdjc8Q80), used under the [Unsplash License](https://unsplash.com/license). The photograph is bundled as `public/sample.jpg`, so the sample and exports work without remote image requests. DM Sans is requested from Google Fonts with system-font fallbacks. User images are never sent to either service.
+
+## Toon module
+
+`src/shaders/toon/` owns a separate parameter model, controls, renderer, and worker. Toon smooths the source, quantizes luminance into 2–8 lighting bands, retains original hues or applies Sunset/Botanical/Graphic palettes, and adds adjustable Sobel ink edges. Smoothing and outline offsets scale with the export dimensions. It shares the gallery sample and supports upload/drop/paste, source comparison, transparent PNG, and original/2×/4×/custom exports. Browser tests cover palette updates, bands/reset, original comparison, PNG dimensions, and alpha preservation.
