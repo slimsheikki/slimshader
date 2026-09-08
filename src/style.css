@@ -22,3 +22,6 @@
 .export-panel{background:linear-gradient(135deg,#2a2a2ac7,#171717d9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top-color:#ffffff20;box-shadow:inset 0 1px #ffffff08,0 -8px 24px #00000012}
 .slider-control input{background:linear-gradient(to right,#d6d6d6 var(--fill),#ffffff18 var(--fill))}
 .toggle-control input:checked{background:#dedede}.toggle-control input:checked:before{background:#303030}
+
+/* A single typographic introduction; artwork carries the gallery. */
+.gallery{padding-top:34px}.ascii-title{margin:0 0 48px;width:100%;line-height:0}.ascii-title canvas{display:block;width:100%;height:auto}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.card-info{padding-top:22px;padding-bottom:22px}.card-info h2{margin:0}@media(max-width:650px){.gallery{padding-top:28px}.ascii-title{margin-bottom:28px}.card-info{padding-top:18px;padding-bottom:18px}}
