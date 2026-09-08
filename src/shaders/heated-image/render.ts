@@ -1,3 +1,4 @@
+import { applySmudges } from './smudge';
 import type { HeatedParams } from './model';
 type Context=OffscreenCanvasRenderingContext2D|CanvasRenderingContext2D;
 const clamp=(x:number)=>Math.max(0,Math.min(1,x));
@@ -27,4 +28,5 @@ export function renderHeated(target:OffscreenCanvas|HTMLCanvasElement,image:Imag
   data[i+3]=p.transparent?source[i+3]:255;
  }
  ctx.putImageData(out,0,0);
+ applySmudges(ctx,w,h,scale,p.smudges);
 }

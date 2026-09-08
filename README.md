@@ -60,3 +60,7 @@ Toon is now **Painterly Toon**, inspired by the surface treatment demonstrated i
 ## Heated Shader (images)
 
 The separate `heated-image` module opens into image upload/drop/paste rather than a generated form. It maps source luminance to violet, magenta, orange, and yellow heat colors, uses image contours for directional hot rims and spectral fringes, and blends local bloom from a blurred luminance field. Controls include heat intensity, rim width, halo, fringe, lighting, and background/transparency. It preserves source alpha when transparent and supports original-image comparison and full-resolution exports. Heated Shapes remains the separate procedural generator.
+
+### Heated image smudge brush
+
+Enable **Smudge** above the image, then drag with mouse, pen, or touch. Brush size is measured in source pixels; strength controls color displacement with a soft radial falloff. Each gesture is one undoable stroke. **Undo smudge**, **Clear smudges**, effect reset, and image replacement manage the stroke history. Original comparison remains untouched. Strokes replay after the heat renderer at the chosen export scale, using premultiplied-alpha interpolation to avoid dark transparency fringes. Preview updates use the worker's newest-request queue. History is bounded (500 points per gesture; new strokes stop when history reaches 2,000 points) to limit replay cost. Large brushes and long histories may take longer to export.
