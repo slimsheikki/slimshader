@@ -44,3 +44,7 @@ Photo by [Liam Ward on Unsplash](https://unsplash.com/photos/a-black-and-white-p
 ## Toon module
 
 `src/shaders/toon/` owns a separate parameter model, controls, renderer, and worker. Toon smooths the source, quantizes luminance into 2–8 lighting bands, retains original hues or applies Sunset/Botanical/Graphic palettes, and adds adjustable Sobel ink edges. Smoothing and outline offsets scale with the export dimensions. It shares the gallery sample and supports upload/drop/paste, source comparison, transparent PNG, and original/2×/4×/custom exports. Browser tests cover palette updates, bands/reset, original comparison, PNG dimensions, and alpha preservation.
+
+## Painterly Toon brushwork
+
+Toon is now **Painterly Toon**, inspired by the surface treatment demonstrated in [SouthernShotty’s reference](https://www.youtube.com/watch?v=AVf8bPOulkI). This is a 2D procedural interpretation, not a Blender material or a 3D lighting simulation. The renderer layers curved, source-colored strokes oriented along image gradients, with deterministic position/length/color variation and fine bristle strands. Cel-shaded ink is composited above the paint so brushwork does not erase outlines. Controls include paint amount, brush size, bristle texture, paint variation, contour following, and pattern shuffle. Stroke geometry and random seeds are measured in source pixels and redrawn at export resolution. Setting paint amount to zero restores the clean cel-shaded look.
