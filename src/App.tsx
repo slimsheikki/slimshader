@@ -15,7 +15,7 @@ import SketchEditor from './shaders/storyboard/Editor';
 import { defaults as sketchDefaults } from './shaders/storyboard/model';
 import { renderSketch } from './shaders/storyboard/render';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useEditorTool } from './webmcp';
 import ToonEditor from './shaders/toon/Editor';
 import { defaults as toonDefaults } from './shaders/toon/model';
@@ -45,8 +45,8 @@ export default function App() {
     if(active&&fadeThumbnail.current)renderFade(fadeThumbnail.current,image,fadeDefaults);
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
-  return <div className="app"><main className="gallery"><AsciiTitle/>
-  <div className="card-grid">{shaders.map(shader=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated'?heatedThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:fadeThumbnail} width={900} height={600}/><span className="card-open"><ArrowUpRight size={24}/></span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowRight size={20}/></div></button>)}</div></main>
+  return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / 07</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
+  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated'?heatedThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
   {open === 'ascii' && <Editor onClose={()=>setOpen(null)}/>}
   {open === 'grain-fade' && <FadeEditor onClose={()=>setOpen(null)}/>}
   {open === 'blueprint' && <BlueprintEditor onClose={()=>setOpen(null)}/>}
