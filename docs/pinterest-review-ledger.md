@@ -68,3 +68,7 @@ The user found the initial graphics too static compared with the reference. Deco
 ### Living Geometry technical motion revision
 
 User requested more random, snappy, technical movement. Replaced continuous curved tracker travel with seeded irregular hold/retarget schedules. Groups of four trackers acquire new image landmarks together, with independently timed group bursts and brief eased transitions. Default sharpness 85 and eight retargets per loop. Added Snap sharpness and Retargets per loop controls; original image movement remains separate. All three Living Geometry tests passed, including stable holds for most frames, meaningful jumps, deterministic random patterns, closed loops, pause, PNG and playable video export.
+
+### Living Geometry looping GIF export
+
+Added worker-based local GIF export with infinite repeat metadata, exact 20 fps sampling, selected loop duration, 480/640/960 px maximum long-side sizes, stable palette, solid background, progress and cancellation. No new shader family. Build and all five Living Geometry tests passed, including GIF decoding, 80 frames for a four-second loop, exact frame delays, infinite repeat, visibly different frames and cancellation, plus previous PNG/video and tracking-motion checks.

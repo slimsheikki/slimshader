@@ -26,6 +26,33 @@ export function useRenderer(image:ImageBitmap|null,params:GeometryParams,canvas:
   renderGeometry(c,image,params,time.current);
   return new Promise<Blob>((resolve,reject)=>c.toBlob(blob=>{c.width=1;c.height=1;blob?resolve(blob):reject(new Error('PNG export failed.'));},'image/png'));
  }
+ async function exportGif(longSide:number){
+  if(!image)throw new Error('Add an image first.');
+  if(recording.current)throw new Error('An export is already running.');
+  if(typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined')throw new Error('GIF export needs a current browser. Try Chrome or Edge.');
+  if(![480,640,960].includes(longSide))throw new Error('Choose a valid GIF size.');
+  recording.current=true;setProgress(0);
+  return new Promise<Blob>((resolve,reject)=>{
+   let worker:Worker|null=null,finished=false;
+   const cleanup=()=>{worker?.terminate();recording.current=false;cancel.current=null;};
+   const fail=(message:string)=>{if(finished)return;finished=true;cleanup();reject(new Error(message));};
+   cancel.current=()=>fail('GIF export cancelled.');
+   try{
+    worker=new Worker(new URL('./gif.worker.ts',import.meta.url),{type:'module'});
+    worker.onmessage=({data})=>{
+     if(finished)return;
+     if(data.error){fail(data.error);return;}
+     if(data.blob){finished=true;cleanup();setProgress(100);resolve(data.blob);}
+     else setProgress(data.progress);
+    };
+    worker.onerror=()=>fail('GIF export failed. Try a smaller size.');
+    void createImageBitmap(image).then(copy=>{
+     if(finished){copy.close();return;}
+     try{worker!.postMessage({image:copy,params:{...params},longSide},[copy]);}catch(e){copy.close();fail((e as Error).message);}
+    }).catch(e=>fail(e.message));
+   }catch(e){fail((e as Error).message);}
+  });
+ }
  async function exportVideo(){
   if(!image)throw new Error('Add an image first.');
   if(recording.current)throw new Error('An export is already running.');
@@ -55,5 +82,5 @@ export function useRenderer(image:ImageBitmap|null,params:GeometryParams,canvas:
    try{recorder.start();frame=requestAnimationFrame(tick);}catch(e){fail((e as Error).message);}
   });
  }
- return{rendering:false,error,exportPng,exportVideo,playing,setPlaying,progress};
+ return{rendering:false,error,exportPng,exportVideo,exportGif,cancelExport:()=>cancel.current?.(),playing,setPlaying,progress};
 }
