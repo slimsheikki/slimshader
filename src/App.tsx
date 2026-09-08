@@ -11,9 +11,6 @@ import { renderBlueprint } from './shaders/blueprint/render';
 import HeatedImageEditor from './shaders/heated-image/Editor';
 import { defaults as heatedImageDefaults } from './shaders/heated-image/model';
 import { renderHeated as renderHeatedImage } from './shaders/heated-image/render';
-import HeatedEditor from './shaders/heated/Editor';
-import { defaults as heatedDefaults } from './shaders/heated/model';
-import { renderHeated } from './shaders/heated/render';
 import SketchEditor from './shaders/storyboard/Editor';
 import { defaults as sketchDefaults } from './shaders/storyboard/model';
 import { renderSketch } from './shaders/storyboard/render';
@@ -36,14 +33,12 @@ export default function App() {
   const fadeThumbnail = useRef<HTMLCanvasElement>(null);
   const blueprintThumbnail = useRef<HTMLCanvasElement>(null);
   const heatedImageThumbnail = useRef<HTMLCanvasElement>(null);
-  const heatedThumbnail = useRef<HTMLCanvasElement>(null);
   const sketchThumbnail = useRef<HTMLCanvasElement>(null);
   const toonThumbnail = useRef<HTMLCanvasElement>(null);
   useEffect(() => { let active = true; fetch(`${import.meta.env.BASE_URL}sample.jpg`).then(r=>r.blob()).then(createImageBitmap).then(image=>{
     if (active && thumbnail.current) renderAscii(thumbnail.current, image, { ...defaults, size: 9 });
     if (active && toonThumbnail.current) renderToon(toonThumbnail.current, image, toonDefaults);
     if (active && sketchThumbnail.current) renderSketch(sketchThumbnail.current,image,sketchDefaults);
-    if(active&&heatedThumbnail.current)renderHeated(heatedThumbnail.current,image,heatedDefaults);
     if(active&&heatedImageThumbnail.current)renderHeatedImage(heatedImageThumbnail.current,image,heatedImageDefaults);
     if(active&&blueprintThumbnail.current)renderBlueprint(blueprintThumbnail.current,image,blueprintDefaults);
     if(active&&fadeThumbnail.current)renderFade(fadeThumbnail.current,image,fadeDefaults);
@@ -51,13 +46,12 @@ export default function App() {
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
   return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / {String(shaders.length).padStart(2,'0')}</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
-  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated'?heatedThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
+  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
   {open === 'glass' && <GlassEditor onClose={()=>setOpen(null)}/>}
   {open === 'ascii' && <Editor onClose={()=>setOpen(null)}/>}
   {open === 'grain-fade' && <FadeEditor onClose={()=>setOpen(null)}/>}
   {open === 'blueprint' && <BlueprintEditor onClose={()=>setOpen(null)}/>}
   {open === 'heated-image' && <HeatedImageEditor onClose={()=>setOpen(null)}/>}
-  {open === 'heated' && <HeatedEditor onClose={()=>setOpen(null)}/>}
   {open === 'storyboard' && <SketchEditor onClose={()=>setOpen(null)}/>}
   {open === 'toon' && <ToonEditor onClose={()=>setOpen(null)}/>}
   </div>;
