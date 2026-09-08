@@ -1,3 +1,6 @@
+import GlassEditor from './shaders/glass/Editor';
+import { defaults as glassDefaults } from './shaders/glass/model';
+import { renderGlass } from './shaders/glass/render';
 import AsciiTitle from './components/AsciiTitle';
 import FadeEditor from './shaders/grain-fade/Editor';
 import { defaults as fadeDefaults } from './shaders/grain-fade/model';
@@ -29,6 +32,7 @@ export default function App() {
   const [open, setOpen] = useState<string | null>(null);
   useEditorTool(()=>setOpen('ascii'));
   const thumbnail = useRef<HTMLCanvasElement>(null);
+  const glassThumbnail = useRef<HTMLCanvasElement>(null);
   const fadeThumbnail = useRef<HTMLCanvasElement>(null);
   const blueprintThumbnail = useRef<HTMLCanvasElement>(null);
   const heatedImageThumbnail = useRef<HTMLCanvasElement>(null);
@@ -43,10 +47,12 @@ export default function App() {
     if(active&&heatedImageThumbnail.current)renderHeatedImage(heatedImageThumbnail.current,image,heatedImageDefaults);
     if(active&&blueprintThumbnail.current)renderBlueprint(blueprintThumbnail.current,image,blueprintDefaults);
     if(active&&fadeThumbnail.current)renderFade(fadeThumbnail.current,image,fadeDefaults);
+    if(active&&glassThumbnail.current)renderGlass(glassThumbnail.current,image,glassDefaults);
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
-  return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / 07</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
-  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated'?heatedThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
+  return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / {String(shaders.length).padStart(2,'0')}</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
+  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated'?heatedThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
+  {open === 'glass' && <GlassEditor onClose={()=>setOpen(null)}/>}
   {open === 'ascii' && <Editor onClose={()=>setOpen(null)}/>}
   {open === 'grain-fade' && <FadeEditor onClose={()=>setOpen(null)}/>}
   {open === 'blueprint' && <BlueprintEditor onClose={()=>setOpen(null)}/>}

@@ -80,3 +80,6 @@ Painterly Toon now paints in three passes: broad angular underpainting, medium f
 ## Public hosting
 
 The live app is hosted on GitHub Pages at https://slimsheikki.github.io/slimshader/. The `gh-pages` branch contains the production build. Build with `npm run build` and publish the contents of `dist` to that branch to update the public app.
+
+### Glass Panels
+Independent image-space glass renderer with panel count, slot coverage (width), rotation, offset, signed refraction, lens curvature, wavy distortion, frost, dispersion and edge lighting. Preview and PNG exports use normalized panel geometry and source-pixel blur. Transparent source images retain refracted alpha; zero glass amount preserves the original.

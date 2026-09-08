@@ -1,0 +1,14 @@
+import {test,expect} from '@playwright/test';
+test('glass parameters change output and export real transparent pixels at 2x',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Open Glass Panels editor'}).click();
+ const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=200;c.height=160;const x=c.getContext('2d')!;const g=x.createLinearGradient(30,0,170,0);g.addColorStop(0,'red');g.addColorStop(1,'blue');x.fillStyle=g;x.fillRect(30,30,140,100);return c.toDataURL().split(',')[1];});
+ await page.getByLabel('Upload image').setInputFiles({name:'test.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
+ await expect(page.getByText('Live preview',{exact:true})).toBeVisible();
+ const canvas=page.getByLabel('Glass Panels image preview');const first=await canvas.evaluate((c:HTMLCanvasElement)=>c.toDataURL());
+ await page.getByRole('slider',{name:'Panel count',exact:true}).fill('4');await page.getByRole('slider',{name:'Panel width',exact:true}).fill('60');
+ await expect.poll(()=>canvas.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(first);
+ await page.getByRole('slider',{name:'Glass amount',exact:true}).fill('0');
+ await expect.poll(()=>canvas.evaluate((c:HTMLCanvasElement)=>c.getContext('2d')!.getImageData(0,0,1,1).data[3])).toBe(0);
+ await page.getByLabel('Export scale').selectOption('2');const download=page.waitForEvent('download');await page.getByRole('button',{name:/Export PNG/}).click();const file=await download;const path=await file.path();const fs=await import('node:fs/promises');const buf=await fs.readFile(path!);expect(buf.readUInt32BE(16)).toBe(400);expect(buf.readUInt32BE(20)).toBe(320);
+ await page.getByRole('button',{name:'Reset all settings'}).click();await expect(page.getByRole('slider',{name:'Panel count',exact:true})).toHaveValue('12');
+});
