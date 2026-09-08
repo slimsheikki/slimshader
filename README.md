@@ -83,3 +83,5 @@ The live app is hosted on GitHub Pages at https://slimsheikki.github.io/slimshad
 
 ### Glass Panels
 Independent image-space glass renderer with panel count, slot coverage (width), rotation, offset, signed refraction, lens curvature, wavy distortion, frost, dispersion and edge lighting. Preview and PNG exports use normalized panel geometry and source-pixel blur. Transparent source images retain refracted alpha; zero glass amount preserves the original.
+
+Glass Panels v2 adds subject distance, glass thickness, selective focus, fine bevel lighting, surface reflections, and bounded panel placement with draggable handles. Fine Flutes and Split Glass presets are included. The original v1 module is retained in `src/shaders/glass-legacy/`, is not registered, and is not included in the production app.

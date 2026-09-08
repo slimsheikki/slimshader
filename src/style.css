@@ -34,3 +34,5 @@
 @media(max-width:650px){.gallery{padding-top:22px}.card-grid{grid-template-columns:1fr;gap:20px}.ascii-title{margin-bottom:24px}.card-info{padding:16px}.card-info h2{font-size:20px}.signal-rule{font-size:9px}}
 
 .shader-card{padding:0;min-width:0}.card-art{height:auto;width:100%}.card-art canvas{position:absolute;inset:0}
+
+.image-frame{position:relative}.glass-placement{position:absolute;z-index:3;touch-action:none;overflow:hidden}.glass-placement *{vector-effect:non-scaling-stroke}
