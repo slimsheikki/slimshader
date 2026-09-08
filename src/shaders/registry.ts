@@ -1,3 +1,5 @@
+import { defaults as heatedImageDefaults } from './heated-image/model';
+import { renderHeated as renderHeatedImage } from './heated-image/render';
 import { defaults as heatedDefaults } from './heated/model';
 import { renderHeated } from './heated/render';
 import { defaults as sketchDefaults } from './storyboard/model';
@@ -6,4 +8,4 @@ import { defaults as toonDefaults } from './toon/model';
 import { renderToon } from './toon/render';
 import { defaults } from './ascii/model';
 import { renderAscii } from './ascii/render';
-export const shaders = [{ id: 'ascii', name: 'ASCII', category: 'Character studies', description: 'Every pixel, a different character.', defaults, render: renderAscii }, { id: 'toon', name: 'Painterly Toon', category: 'Paint & ink', description: 'Brushwork meets bold outlines.', defaults: toonDefaults, render: renderToon }, {id:'storyboard',name:'Storyboard Sketch',category:'Pencil & value',description:'A scene, reduced to its essentials.',defaults:sketchDefaults,render:renderSketch}, {id:'heated',name:'Heated Shapes',category:'Thermal forms',description:'Sculpted in color. Lit from within.',defaults:heatedDefaults,render:renderHeated}] as const;
+export const shaders = [{ id: 'ascii', name: 'ASCII', category: 'Character studies', description: 'Every pixel, a different character.', defaults, render: renderAscii }, { id: 'toon', name: 'Painterly Toon', category: 'Paint & ink', description: 'Brushwork meets bold outlines.', defaults: toonDefaults, render: renderToon }, {id:'storyboard',name:'Storyboard Sketch',category:'Pencil & value',description:'A scene, reduced to its essentials.',defaults:sketchDefaults,render:renderSketch}, {id:'heated',name:'Heated Shapes',category:'Thermal forms',description:'Sculpted in color. Lit from within.',defaults:heatedDefaults,render:renderHeated}, {id:'heated-image',name:'Heated Shader',category:'Image heat',description:'Your image, glowing from within.',defaults:heatedImageDefaults,render:renderHeatedImage}] as const;
