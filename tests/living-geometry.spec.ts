@@ -13,3 +13,23 @@ test('Living Geometry animates, pauses, adjusts and exports PNG and playable vid
  expect(details.w).toBe(1280);expect(details.h).toBe(854);expect(details.time).toBeGreaterThan(0);
  await page.screenshot({path:'../work/living-geometry-editor.png'});
 });
+
+test('tracking moves substantially with a still image and closes its loop smoothly',async({page})=>{
+ await page.goto('/');
+ const result=await page.evaluate(async()=>{
+  // @ts-expect-error browser imports the source module through Vite
+  const {trackingNodes,renderGeometry}=await import('/src/shaders/living-geometry/render.ts');
+  // @ts-expect-error browser imports the source module through Vite
+  const {defaults}=await import('/src/shaders/living-geometry/model.ts');
+  const image=await createImageBitmap(await(await fetch('/sample.jpg')).blob());const p={...defaults,motion:0,particles:0};
+  type P={x:number;y:number};
+  const distance=(a:P[],b:P[])=>a.reduce((sum,n,i)=>sum+Math.hypot(n.x-b[i].x,n.y-b[i].y),0)/a.length;
+  const first=trackingNodes(image,p,0),quarter=trackingNodes(image,p,2),end=trackingNodes(image,p,8),near=trackingNodes(image,p,7.999);
+  const still={...p,tracking:0};
+  const panel=document.createElement('div');panel.style.cssText='position:fixed;inset:0;background:#080808;z-index:99999;color:white;display:flex;gap:16px;padding:16px';
+  for(const t of [0,2,4]){const item=document.createElement('div'),c=document.createElement('canvas');c.width=600;c.height=400;c.style.width='100%';renderGeometry(c,image,p,t);item.textContent=`${t} seconds`;item.append(c);panel.append(item);}document.body.append(panel);
+  const value={travel:distance(first,quarter),loop:distance(first,end),near:distance(first,near),still:distance(trackingNodes(image,still,0),trackingNodes(image,still,2))};image.close();return value;
+ });
+ expect(result.travel).toBeGreaterThan(.1);expect(result.loop).toBeLessThan(.000001);expect(result.near).toBeLessThan(.001);expect(result.still).toBe(0);
+ await page.screenshot({path:'../work/tracking-motion-comparison.png'});
+});
