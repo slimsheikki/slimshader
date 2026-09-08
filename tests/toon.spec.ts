@@ -46,3 +46,8 @@ test('original colors are default and Saturation desaturates the painted result'
   await page.getByLabel('Saturation',{exact:true}).focus();await page.keyboard.press('Home');
   await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>{const d=c.getContext('2d')!.getImageData(50,80,1,1).data;return Math.max(d[0],d[1],d[2])-Math.min(d[0],d[1],d[2]);})).toBe(0);
 });
+test('stroke shapes and size variety produce distinct paint patterns',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Open Painterly Toon editor'}).click();await page.getByRole('button',{name:'Or try the sample image'}).click();const c=page.locator('canvas[aria-label="Painterly Toon image preview"]');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.width)).toBe(1600);
+ const mixed=await c.evaluate((c:HTMLCanvasElement)=>c.toDataURL());await page.getByLabel('Stroke shape',{exact:true}).selectOption('flat');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(mixed);const flat=await c.evaluate((c:HTMLCanvasElement)=>c.toDataURL());await page.getByLabel('Size variety',{exact:true}).focus();await page.keyboard.press('Home');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(flat);
+ await page.getByRole('button',{name:'Reset all settings'}).click();await expect(page.getByLabel('Stroke shape',{exact:true})).toHaveValue('mixed');await expect(page.getByLabel('Size variety',{exact:true})).toHaveValue('75');
+});

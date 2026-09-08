@@ -41,23 +41,41 @@ export function renderToon(target: Surface, image: ImageBitmap, p: ToonParams) {
   if(p.paint>0){
     // Deterministic source-space strokes redraw at export resolution, never upscale a texture.
     ctx.save();ctx.scale(scale,scale);ctx.lineCap='round';
-    const size=p.brushSize, grid=Math.max(size*.55,Math.sqrt(image.width*image.height/180000));
+    // Coarse underpainting first, followed by medium marks and selective fine accents.
+    const passes=[{factor:2.8,amount:p.broadStrokes/100},{factor:1,amount:1},{factor:.38,amount:p.detailStrokes/100}];
+    for(let pass=0;pass<passes.length;pass++){
+    const {factor,amount}=passes[pass];if(amount===0)continue;
+    const size=p.brushSize*(1+(factor-1)*p.sizeVariation/100);
+    const grid=Math.max(size*.7,Math.sqrt(image.width*image.height/65000));
     for(let row=0;row*grid<image.height;row++)for(let col=0;col*grid<image.width;col++){
-      const random=(n:number)=>noise(col,row,p.seed+n);
+      const random=(n:number)=>noise(col,row,p.seed+n+pass*137);
       const x=(col+.15+random(1)*.7)*grid,y=(row+.15+random(2)*.7)*grid;
       const px=Math.min(w-1,Math.floor(x*scale)),py=Math.min(h-1,Math.floor(y*scale));
       const i=(py*w+px)*4;if(input[i+3]<12)continue;
       const r=Math.max(1,Math.round(size*.45*scale));
       const gx=lum(px+r,py)-lum(px-r,py),gy=lum(px,py+r)-lum(px,py-r);
+      const gradient=Math.hypot(gx,gy);
+      if(pass===0&&gradient>.3)continue;
+      if(pass===2&&random(42)>amount*(.15+Math.min(1,gradient*5)))continue;
       const direction=Math.atan2(gy,gx)+Math.PI/2;
       const angle=direction*p.flow/100+(-.65)* (1-p.flow/100)+(random(3)-.5)*.7;
-      const length=size*(1.1+random(4)*1.2),width=size*(.3+random(5)*.28);
+      const spread=1+(random(41)*1.7-.65)*p.sizeVariation/100;
+      const length=size*(.75+random(4)*1.5)*spread,width=size*(.32+random(5)*.55)*spread;
+      const flat=p.strokeStyle==='flat'||(p.strokeStyle==='mixed'&&random(43)>.25);
       const dx=Math.cos(angle),dy=Math.sin(angle),bend=(random(6)-.5)*size*.35;
       const tint=(random(7)-.5)*p.variation*1.5;
       const base=[0,1,2].map(c=>Math.max(0,Math.min(255,data[i+c]+tint)));
-      ctx.globalAlpha=p.paint/100*.72;ctx.strokeStyle=`rgb(${base.join(',')})`;ctx.lineWidth=width;
-      ctx.beginPath();ctx.moveTo(x-dx*length*.5,y-dy*length*.5);
-      ctx.quadraticCurveTo(x-dy*bend,y+dx*bend,x+dx*length*.5,y+dy*length*.5);ctx.stroke();
+      ctx.globalAlpha=p.paint/100*(pass===0?.85*amount:pass===2?.65:.78);ctx.strokeStyle=`rgb(${base.join(',')})`;ctx.lineWidth=width;
+      if(flat){
+        // Irregular chisel-ended polygons produce broad planar paint rather than uniform noodles.
+        ctx.fillStyle=`rgb(${base.join(',')})`;ctx.beginPath();
+        const vertices=[[-.5,-.38],[-.42,-.55],[.38,-.46],[.53,-.2],[.44,.48],[-.36,.52],[-.52,.16]];
+        vertices.forEach(([u,v],n)=>{const jitter=(random(50+n)-.5)*.16;const xx=x+dx*(u+jitter)*length-dy*v*width,yy=y+dy*(u+jitter)*length+dx*v*width;n?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);});
+        ctx.closePath();ctx.fill();
+      }else{
+        ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x-dx*length*.5,y-dy*length*.5);
+        ctx.quadraticCurveTo(x-dy*bend,y+dx*bend,x+dx*length*.5,y+dy*length*.5);ctx.stroke();
+      }
       // Uneven, fine parallel strands create dry-brush ridges rather than a noise overlay.
       for(let b=0;b<5;b++){
         const offset=(b/4-.5)*width*.86,trim=random(10+b)*.3;
@@ -67,6 +85,7 @@ export function renderToon(target: Surface, image: ImageBitmap, p: ToonParams) {
         ctx.beginPath();ctx.moveTo(x-dx*length*(.5-trim)-dy*offset,y-dy*length*(.5-trim)+dx*offset);
         ctx.quadraticCurveTo(x-dy*(bend+offset),y+dx*(bend+offset),x+dx*length*.45-dy*offset,y+dy*length*.45+dx*offset);ctx.stroke();
       }
+    }
     }
     ctx.restore();
   }
