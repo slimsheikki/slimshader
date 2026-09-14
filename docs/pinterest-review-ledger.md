@@ -76,3 +76,44 @@ Added worker-based local GIF export with infinite repeat metadata, exact 20 fps 
 ### Glass Panels overlapping refraction revision
 
 User provided fluted flower references and approved a more realistic replacement. Updated existing Glass Panels rather than adding a duplicate: curved cylindrical refraction with propagation across a source-space gap makes neighbouring panels reveal overlapping parts of the image. Default light/focus tuned for clearer transmission. Added Reeded Glass preset. Prior renderer and defaults saved in unregistered `glass-previous`; original legacy backup retained. Synthetic single-stem comparison: previous default lost the stem at a panel seam; new default reveals two copies, Reeded Glass seven. Visually compared old/new output on the shared photograph. Production build and three glass tests passed, including repeated thin details at 1x/2x, unchanged clear gaps, zero-effect identity, direct placement and transparent PNG export.
+
+
+## Weekly review — 2026-09-14 (partial; visual access blocked)
+
+Honoured the latest instruction prohibiting computer use. Public board HTML was retrieved successfully over HTTP (200), without browser/UI automation. It reports 16 pins and exposes 16 image elements labelled Pin. All 13 previously recorded thumbnail hashes are present, plus the following three previously unexposed references. These are newly accessible identities, not evidence of newly saved pins. No recommendations were included. The public HTML exposed no canonical /pin/ links, and the inspected __PWS_DATA__ script yielded no typed pin objects; do not invent canonical pin IDs.
+
+| Thumbnail hash | Public thumbnail URL | Review status |
+|---|---|---|
+| 3cbb1d49e5a9c2bffcca6705288ab3ff | https://i.pinimg.com/236x/3c/bb/1d/3cbb1d49e5a9c2bffcca6705288ab3ff.jpg | Unreviewed: visual retrieval unavailable; no description inferred |
+| 2f342b3901e1d2dc7f3eda5197900931 | https://i.pinimg.com/236x/2f/34/2b/2f342b3901e1d2dc7f3eda5197900931.jpg | Unreviewed: visual retrieval unavailable; no description inferred |
+| ee8f78936d397254bec223fbfd349ae5 | https://i.pinimg.com/236x/ee/8f/78/ee8f78936d397254bec223fbfd349ae5.jpg | Unreviewed: visual retrieval unavailable; no description inferred |
+
+The image-reading web tool rejected all three thumbnail URLs and the unclear abstract petal backlog thumbnail. Did not use computer use or download media to circumvent the display restriction. Board metadata is accessible, but the visual review cannot be completed through the permitted access in this run.
+
+Duplicate checks: (1) matched all 13 known identities to the prior ledger; repost/crop similarity checks for the three unreadable references remain pending. (2) confirmed the registry still contains 15 active shader modules, alongside glass-previous/glass-legacy backups and removed heated module; existing ledger mappings remain in force. No effect-level classification is claimed for unseen references. (3) candidate/sample comparisons were not run because no new candidate could pass visual identification. No shader changes, builds or deployments were made. The abstract petal remains unclear; other previously deferred trail/iridescent references are covered by Flow Trails and Iridescent Film as recorded above. Preserve these three references for the next permitted visual check.
+
+Last published implementation remains source 49aa8c1, GitHub Pages release 024594d (verified in the preceding user-authorized publication). This review did not reverify live assets or publish a new release.
+
+### Same-day retry — browser-only visual access restored
+
+User clarified that browser computer control is permitted; desktop/app control and entering a separate computer-use mode are not wanted. Used the background in-app browser only. Opened the existing 236px thumbnail URLs directly and visually inspected all three; no media downloaded, enlarged pin view or Adobe connection used. This resolves the visual-access blockage above. These identities were already present in the 16-pin board HTML and are not claimed to be newly saved today.
+
+| Thumbnail hash | Visual observation | Duplicate assessment / next action |
+|---|---|---|
+| 3cbb1d49e5a9c2bffcca6705288ab3ff | Warm orange/red portrait with long continuous streaks trailing from the face and hair; soft directional dragging, face partly retained | Closest to Flow Trails, but reference drags continuous image texture rather than drawing sampled strands; Digital Streaks uses hard rectangular slices. Prefer a soft image-smear refinement to Flow Trails before proposing a separate card. Warm palette alone is not a shader. |
+| 2f342b3901e1d2dc7f3eda5197900931 | Small sphere covered in pale yellow, cyan and red curled marble-like bands against black | Potential Liquid Marble image treatment: spatial swirling and curled color bands. Existing Iridescent Film varies interference color from luminance/relief but does not advect image texture into these swirls. Sphere is subject geometry, not evidence for resurrecting removed Heated Shapes. Candidate only; requires same-sample output comparison before implementation. |
+| ee8f78936d397254bec223fbfd349ae5 | Magic Glow graphic: cyan-white glowing portrait with deep black areas and negative/solarized-looking tones | Closest to Heated Shader's luminous tonal remapping; compare a cold glow/inverted tonal preset there before adding any separate shader. Typography, barcode and QR-like decoration are composition, not the effect. Exact tonal operation uncertain from the thumbnail. |
+
+Checks completed for this follow-up: reference identities and visual descriptions compared with the prior ledger; nearest actual renderers/parameter models inspected (Flow Trails, Digital Streaks, Iridescent Film, Heated Shader, Grain Fade, Spectral Bloom, Chromatic Contours, plus removed Heated Shapes model). Candidates compared conceptually against one another: continuous image dragging, spatial marbling, and luminous tonal treatment are different operations. The third implementation gate (same-sample rendered candidate comparison) remains pending; no new effect is yet approved by all three checks. Current user request was to inspect the previously blocked references, so no renderer edits, build, or publication were performed.
+
+### Approved implementation — 2026-09-14
+
+User explicitly requested “Publish new ones.” Completed the third duplicate gate by rendering all candidates and their nearest existing effects on the same David photograph:
+
+- `2f342b3901e1d2dc7f3eda5197900931` → **Liquid Marble**, a new independent shader. Spatial vortices and curled pigment bands differ from Iridescent Film’s surface-color interference. The gallery now contains 16 active shaders.
+- `3cbb1d49e5a9c2bffcca6705288ab3ff` → **Motion Smear** inside Flow Trails. Continuous curved source accumulation differs from Light Strands and rectangular Digital Streaks, but belongs in the existing motion family.
+- `ee8f78936d397254bec223fbfd349ae5` → **Cold Glow** inside Heated Shader. Negative-tone cyan/white mapping and shadow protection extend the existing thermal/glow renderer; no duplicate card. Smudge strokes remain supported.
+
+All three thumbnail identities are now covered; do not recreate them in later reviews. These are original image-based interpretations, with no reference assets bundled. Existing hidden glass backups and removed Heated Shapes remain unregistered. The abstract petal backlog remains unresolved.
+
+Validation: production build passed. The initial 12-test run covered all eight board-derived cards plus the two new modes and Heated smudge regression. After refining Cold Glow shadow protection, all five focused tests passed, including the same-image comparison, changed parameters, transparency, 2× PNG export and smudge undo/export. The final comparison was visually inspected.

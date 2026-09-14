@@ -1,7 +1,9 @@
+import {renderSmear} from './smear';
 import type {FlowParams} from './model';
 import {noise} from '../ascii/model';
 import {source,context,background,type Surface} from '../shared/canvas';
 export function renderFlow(target:Surface,image:ImageBitmap,p:FlowParams){
+ if(p.mode==='smear'){renderSmear(target,image,p);return;}
  const w=target.width,h=target.height,scale=w/image.width,ctx=context(target);
  const cols=Math.ceil(image.width/p.spacing),rows=Math.ceil(image.height/p.spacing);
  if(cols*rows>300000)throw Error('Increase strand spacing for this image.');

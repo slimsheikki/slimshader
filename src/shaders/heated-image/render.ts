@@ -3,7 +3,8 @@ import type { HeatedParams } from './model';
 type Context=OffscreenCanvasRenderingContext2D|CanvasRenderingContext2D;
 const clamp=(x:number)=>Math.max(0,Math.min(1,x));
 const stops=[[7,4,27],[26,7,91],[79,15,148],[166,34,135],[240,73,84],[255,153,72],[255,237,164]];
-const thermal=(v:number)=>{const t=clamp(v)*6,i=Math.min(5,Math.floor(t)),f=t-i;return stops[i].map((n,c)=>n*(1-f)+stops[i+1][c]*f);};
+const coldStops=[[0,3,9],[3,20,38],[15,67,95],[65,143,172],[138,213,226],[214,247,247],[255,255,222]];
+const thermal=(v:number,colors=stops)=>{const t=clamp(v)*6,i=Math.min(5,Math.floor(t)),f=t-i;return colors[i].map((n,c)=>n*(1-f)+colors[i+1][c]*f);};
 // Image luminance drives heat; source contours drive directional rims and spectral fringes.
 export function renderHeated(target:OffscreenCanvas|HTMLCanvasElement,image:ImageBitmap,p:HeatedParams){
  const w=target.width,h=target.height,scale=w/image.width,ctx=target.getContext('2d',{willReadFrequently:true}) as Context;
@@ -17,12 +18,14 @@ export function renderHeated(target:OffscreenCanvas|HTMLCanvasElement,image:Imag
   const i=(y*w+x)*4,l=luminance(source,i),blur=luminance(soft,i);
   const dx=at(x+step,y)-at(x-step,y),dy=at(x,y+step)-at(x,y-step),edge=Math.hypot(dx,dy);
   const light=clamp(.5+(dx*Math.cos(angle)+dy*Math.sin(angle))*2);
-  const heat=clamp(l*(.55+p.heat*.009)+edge*(.15+p.rim*.006)*light);
-  const color=thermal(heat),halo=thermal(clamp(blur+.18));
-  const bloom=clamp(blur-l)*p.glow/100*.7,fringe=edge*p.dispersion/100;
-  const alpha=source[i+3]/255;
+  const tone=l*(1-p.negative/100)+(1-l)*p.negative/100,blurTone=blur*(1-p.negative/100)+(1-blur)*p.negative/100;
+  const heat=clamp(tone*(.55+p.heat*.009)+edge*(.15+p.rim*.006)*light);
+  const colors=p.palette==='cold'?coldStops:stops;
+  const color=thermal(heat,colors),halo=thermal(clamp(blurTone+.18),colors);
+  const bloom=clamp(blurTone-tone)*p.glow/100*.7,fringe=edge*p.dispersion/100;
+  const alpha=source[i+3]/255,gate=p.shadow>0?clamp(l/(p.shadow/100)):1,protection=gate*gate*(3-2*gate);
   for(let c=0;c<3;c++){
-   const v=Math.min(255,color[c]+halo[c]*bloom+fringe*[0,75,110][c]);
+   const v=Math.min(255,(color[c]+halo[c]*bloom+fringe*[0,75,110][c])*protection);
    data[i+c]=p.transparent?v:v*alpha+bg[c]*(1-alpha);
   }
   data[i+3]=p.transparent?source[i+3]:255;
