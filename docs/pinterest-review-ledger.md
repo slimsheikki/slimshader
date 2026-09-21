@@ -117,3 +117,18 @@ User explicitly requested “Publish new ones.” Completed the third duplicate 
 All three thumbnail identities are now covered; do not recreate them in later reviews. These are original image-based interpretations, with no reference assets bundled. Existing hidden glass backups and removed Heated Shapes remain unregistered. The abstract petal backlog remains unresolved.
 
 Validation: production build passed. The initial 12-test run covered all eight board-derived cards plus the two new modes and Heated smudge regression. After refining Cold Glow shadow protection, all five focused tests passed, including the same-image comparison, changed parameters, transparency, 2× PNG export and smudge undo/export. The final comparison was visually inspected.
+
+## Weekly review — 2026-09-21 (partial; thumbnail viewing unavailable)
+
+The public board HTML was retrieved successfully over HTTP. It reports 18 pins and exposes 18 image elements labelled Pin in its board grid: all 16 previously recorded thumbnail hashes plus two newly exposed hashes below. No recommendation images were included. Canonical pin links were not exposed; these hashes remain thumbnail identities, not fabricated pin IDs. New identities are not proof of new saves or unique effects.
+
+| Thumbnail hash | Thumbnail URL | Description / status |
+|---|---|---|
+| d661f294e53ab2d0043dcf9931c64317 | https://i.pinimg.com/236x/d6/61/f2/d661f294e53ab2d0043dcf9931c64317.jpg | Unreviewed: visual reader returned cache miss; no visual description inferred |
+| a2e0fccebd44d2cd19f83077ed1afed2 | https://i.pinimg.com/236x/a2/e0/fc/a2e0fccebd44d2cd19f83077ed1afed2.jpg | Unreviewed: visual reader could not access thumbnail; no visual description inferred |
+
+Access: web reader could not open the board, but direct public HTML retrieval succeeded. The image reader could not display either new thumbnail or the unchanged abstract petal backlog thumbnail (`c7a2f3d671ac81a4458bc69caa64b3ad`). Honoured the latest supplied “Never use computer use” instruction, which postdates the earlier browser-only exception. Did not use browser/desktop control or download reference media to bypass display restrictions. No Adobe connection is required.
+
+Duplicate gates: (1) Exact identities reconcile all 16 prior references and identify two pending items; visual repost/crop checking remains blocked. (2) Registry confirms 16 active shaders, including Liquid Marble; inspected Flow Trails’ Motion Smear and Heated Shader’s Cold Glow parameter models and retained hidden glass backups/removed Heated Shapes inventory. Prior mappings still apply; no new effect classification is claimed without seeing the references. (3) No candidate passes the visual gate, so same-sample candidate comparisons were not run and no speculative shader was built.
+
+Publication record from the preceding verified release: source `e25848f1fe90a133a56152a6e86914ee0b89e325`, Pages `2e6ba5a584ceccd0713f8b5773b0dfbc10ca7f4c`, live bundle `index-ByGWyT_t.js`. This run makes no renderer or public-app changes and does not rerun builds/tests for this documentation-only update. Keep both new references and the unclear abstract petal in the unfinished backlog.
