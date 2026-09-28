@@ -132,3 +132,13 @@ Access: web reader could not open the board, but direct public HTML retrieval su
 Duplicate gates: (1) Exact identities reconcile all 16 prior references and identify two pending items; visual repost/crop checking remains blocked. (2) Registry confirms 16 active shaders, including Liquid Marble; inspected Flow Trails’ Motion Smear and Heated Shader’s Cold Glow parameter models and retained hidden glass backups/removed Heated Shapes inventory. Prior mappings still apply; no new effect classification is claimed without seeing the references. (3) No candidate passes the visual gate, so same-sample candidate comparisons were not run and no speculative shader was built.
 
 Publication record from the preceding verified release: source `e25848f1fe90a133a56152a6e86914ee0b89e325`, Pages `2e6ba5a584ceccd0713f8b5773b0dfbc10ca7f4c`, live bundle `index-ByGWyT_t.js`. This run makes no renderer or public-app changes and does not rerun builds/tests for this documentation-only update. Keep both new references and the unclear abstract petal in the unfinished backlog.
+
+## Weekly review — 2026-09-28 (unchanged; visual backlog retained)
+
+Public board HTML retrieval succeeded: 18 reported pins and 18 Pin-labelled board thumbnails. Compared the complete thumbnail URL set against the saved September 21 board response: no added, removed or changed identities. No canonical pin links were exposed and no recommendation images were included.
+
+Retried both pending thumbnails (`d661f294e53ab2d0043dcf9931c64317`, `a2e0fccebd44d2cd19f83077ed1afed2`) and the abstract petal backlog (`c7a2f3d671ac81a4458bc69caa64b3ad`) through the image reader; the same cache-miss/inaccessible-image failures persist. No new visual descriptions or effect matches are inferred. Computer use remains prohibited; no media downloaded to bypass display restrictions.
+
+Duplicate checks: (1) all 18 identities match last week; visual crop/repost analysis remains incomplete for the two unreadable references. (2) source files are unchanged from the last published implementation, so all 16 active shader mappings, existing presets, hidden glass backups and removed Heated Shapes exclusions remain in force. (3) no new visually verified candidate exists; same-sample comparisons and implementation remain deferred. No renderer changes, build, tests or Pages release were warranted. Last published app remains source `e25848f` / Pages `2e6ba5a`.
+
+The previously reported access limitation is unchanged. Retain the three-item visual backlog and stay quiet on this run; no new user action is required beyond the outstanding request already sent.
