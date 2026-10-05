@@ -1,0 +1,10 @@
+import {test,expect} from '@playwright/test';
+import fs from 'node:fs';
+test('fade mask removes lower image, inverts, switches radial and exports alpha at 2x',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Open Grain Fade editor'}).click();const b=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=200;c.height=300;const x=c.getContext('2d')!;x.fillStyle='#385e91';x.fillRect(0,0,200,300);return c.toDataURL().split(',')[1];});await page.getByLabel('Upload image').setInputFiles({name:'fade.png',mimeType:'image/png',buffer:Buffer.from(b,'base64')});const c=page.locator('canvas[aria-label="Grain Fade image preview"]');await expect.poll(()=>c.evaluate((c:HTMLCanvasElement)=>c.width)).toBe(200);
+ await page.getByRole('switch',{name:'Fade to transparency'}).check();
+ const alpha=()=>c.evaluate((c:HTMLCanvasElement)=>{const x=c.getContext('2d')!;return [x.getImageData(100,30,1,1).data[3],x.getImageData(100,270,1,1).data[3]];});await expect.poll(alpha).toEqual([255,0]);
+ await page.getByRole('switch',{name:'Invert mask'}).check();await expect.poll(alpha).toEqual([0,255]);await page.getByRole('switch',{name:'Invert mask'}).uncheck();await page.getByLabel('Mask shape',{exact:true}).selectOption('radial');await expect(page.getByLabel('Mask radius',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Reset all settings'}).click();await page.getByRole('switch',{name:'Fade to transparency'}).check();await page.getByLabel('Export scale',{exact:true}).selectOption('2');const event=page.waitForEvent('download');await page.getByRole('button',{name:'Export PNG'}).click();const d=await event;const png=fs.readFileSync((await d.path())!);expect(png.readUInt32BE(16)).toBe(400);expect(png.readUInt32BE(20)).toBe(600);
+ const exported=await page.evaluate(async(b64)=>{const image=await createImageBitmap(await(await fetch('data:image/png;base64,'+b64)).blob());const c=document.createElement('canvas');c.width=400;c.height=600;const x=c.getContext('2d')!;x.drawImage(image,0,0);return x.getImageData(200,540,1,1).data[3];},png.toString('base64'));expect(exported).toBe(0);
+});
