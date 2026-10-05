@@ -156,3 +156,5 @@ User requested a Nokia monochrome screen filter. Added `nokia-lcd`, the 17th act
 This direct request is separate from the unreadable Pinterest backlog. Checked the existing registry and nearest parameter/render models: ASCII draws font glyphs; Blueprint Mosaic fills a thresholded silhouette with symbols; neither has binary screen-cell dithering or a fixed logical LCD layout. Do not create another Nokia/LCD family for a new subject or palette.
 
 Validation: production build and all three focused tests passed. Verified upload, drag/drop, clipboard paste, parameter changes, reset, transparent source/background, 2× PNG dimensions/alpha, two-tone pixel values, complementary inversion, identical logical patterns across 1×/2× and undistorted classic screen placement. Visually inspected the rendered shared David photograph. Existing weekly visual backlog remains unchanged.
+
+Published and verified on 2026-10-05: source `45650b7`, GitHub Pages `b817403`, app bundle `index-yI4bHrum.js`, LCD worker `worker-DNpfLX95.js`. Live HTML serves the new app and both app/worker files match the tested production build byte-for-byte.
