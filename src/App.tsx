@@ -1,3 +1,6 @@
+import LcdEditor from './shaders/nokia-lcd/Editor';
+import {defaults as lcdDefaults} from './shaders/nokia-lcd/model';
+import {renderLcd} from './shaders/nokia-lcd/render';
 import MarbleEditor from './shaders/liquid-marble/Editor';
 import {defaults as marbleDefaults} from './shaders/liquid-marble/model';
 import {renderMarble} from './shaders/liquid-marble/render';
@@ -61,6 +64,7 @@ export default function App() {
   const streakThumbnail=useRef<HTMLCanvasElement>(null);
   const flowThumbnail=useRef<HTMLCanvasElement>(null);
   const geometryThumbnail=useRef<HTMLCanvasElement>(null);
+  const lcdThumbnail=useRef<HTMLCanvasElement>(null);
   const marbleThumbnail=useRef<HTMLCanvasElement>(null);
   const dustThumbnail=useRef<HTMLCanvasElement>(null);
   const filmThumbnail=useRef<HTMLCanvasElement>(null);
@@ -88,10 +92,11 @@ export default function App() {
     if(active&&dustThumbnail.current)renderDust(dustThumbnail.current,image,dustDefaults);
     if(active&&geometryThumbnail.current)renderGeometry(geometryThumbnail.current,image,geometryDefaults);
     if(active&&marbleThumbnail.current)renderMarble(marbleThumbnail.current,image,marbleDefaults);
+    if(active&&lcdThumbnail.current)renderLcd(lcdThumbnail.current,image,lcdDefaults);
     image.close();
   }).catch(()=>{}); return ()=>{active=false;}; }, []);
   return <div className="app"><main className="gallery"><AsciiTitle/><div className="signal-rule"><span>SHADER COLLECTION / {String(shaders.length).padStart(2,'0')}</span><span className="signal-bars" aria-hidden="true">{Array.from({length:24},(_,i)=><i key={i}/>)}</span></div>
-  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='liquid-marble'?marbleThumbnail:shader.id==='living-geometry'?geometryThumbnail:shader.id==='luminous-dust'?dustThumbnail:shader.id==='iridescent-film'?filmThumbnail:shader.id==='flow-trails'?flowThumbnail:shader.id==='spectral-bloom'?spectralThumbnail:shader.id==='particle-field'?particleThumbnail:shader.id==='chromatic-contours'?contourThumbnail:shader.id==='digital-streaks'?streakThumbnail:shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
+  <div className="card-grid">{shaders.map((shader,index)=><button className="shader-card" key={shader.id} onClick={()=>setOpen(shader.id)} aria-label={`Open ${shader.name} editor`}><div className="card-art"><canvas ref={shader.id==='nokia-lcd'?lcdThumbnail:shader.id==='liquid-marble'?marbleThumbnail:shader.id==='living-geometry'?geometryThumbnail:shader.id==='luminous-dust'?dustThumbnail:shader.id==='iridescent-film'?filmThumbnail:shader.id==='flow-trails'?flowThumbnail:shader.id==='spectral-bloom'?spectralThumbnail:shader.id==='particle-field'?particleThumbnail:shader.id==='chromatic-contours'?contourThumbnail:shader.id==='digital-streaks'?streakThumbnail:shader.id==='ascii'?thumbnail:shader.id==='toon'?toonThumbnail:shader.id==='storyboard'?sketchThumbnail:shader.id==='heated-image'?heatedImageThumbnail:shader.id==='blueprint'?blueprintThumbnail:shader.id==='glass'?glassThumbnail:fadeThumbnail} width={900} height={600}/><span className="signal-index">{String(index+1).padStart(2,'0')}</span></div><div className="card-info"><div><h2>{shader.name}</h2></div><ArrowUpRight size={20}/></div></button>)}</div></main>
   {open === 'spectral-bloom' && <SpectralEditor onClose={()=>setOpen(null)}/>}
   {open === 'particle-field' && <ParticleEditor onClose={()=>setOpen(null)}/>}
   {open === 'chromatic-contours' && <ContourEditor onClose={()=>setOpen(null)}/>}
@@ -100,6 +105,7 @@ export default function App() {
   {open === 'iridescent-film' && <FilmEditor onClose={()=>setOpen(null)}/>}
   {open === 'luminous-dust' && <DustEditor onClose={()=>setOpen(null)}/>}
   {open === 'living-geometry' && <GeometryEditor onClose={()=>setOpen(null)}/>}
+  {open === 'nokia-lcd' && <LcdEditor onClose={()=>setOpen(null)}/>}
   {open === 'liquid-marble' && <MarbleEditor onClose={()=>setOpen(null)}/>}
   {open === 'glass' && <GlassEditor onClose={()=>setOpen(null)}/>}
   {open === 'ascii' && <Editor onClose={()=>setOpen(null)}/>}
